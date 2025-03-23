@@ -1,18 +1,30 @@
 import pymysql
 import pandas as pd
 import json
+import os
+from dotenv import load_dotenv
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
-# 📌 Koneksi ke Database MySQL
-db_connection = pymysql.connect(
-    host="localhost",
-    user="root",
-    password="",
-    database="classification_app"
-)
+# Load environment variables from Laravel .env
+if (load_dotenv("/www/wwwroot/klasifikbantuan/.env")):
+    load_dotenv("/www/wwwroot/klasifikbantuan/.env")
+    # 📌 Koneksi ke Database MySQL
+    db_connection = pymysql.connect(
+        host=os.getenv("DB_HOST"),
+        user=os.getenv("DB_USERNAME"),
+        password=os.getenv("DB_PASSWORD"),
+        database=os.getenv("DB_DATABASE")
+    )
+else:
+    db_connection = pymysql.connect(
+        host="localhost",
+        user="root",
+        password="",
+        database="classification_app"
+    )
 cursor = db_connection.cursor()
 
 # 📌 Ambil data dari citizens & attribute_citizens
