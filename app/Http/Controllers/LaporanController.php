@@ -34,9 +34,7 @@ class LaporanController extends Controller
         $accuracy = $latestModelEvaluation->accuracy ?? '';
         $confusionMatrix = $latestModelEvaluation->conf_matrix ?? '';
 
-        if ($type === 'pdf') {
-            return $this->exportPdf($accuracy, $confusionMatrix);
-        }
+        return $this->exportPdf($accuracy, $confusionMatrix);
     }
 
     private function exportPdf($accuracy, $confusionMatrix)
