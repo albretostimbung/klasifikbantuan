@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('model_evaluations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->float('accuracy');
-            $table->text('conf_matrix');
-            $table->float('model_precision');
-            $table->float('model_recall');
-            $table->float('model_f1_score');
+            $table->float('accuracy')->nullable();
+            $table->text('conf_matrix')->nullable();
+            $table->float('model_precision')->nullable();
+            $table->float('model_recall')->nullable();
+            $table->float('model_f1_score')->nullable();
             $table->timestamps();
         });
     }

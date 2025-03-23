@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('predicts', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('model_evaluation_id')->constrained()->cascadeOnDelete();
             $table->foreignId('citizen_id')->constrained()->cascadeOnDelete();
             $table->boolean('is_eligible');
             $table->timestamps();

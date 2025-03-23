@@ -11,9 +11,14 @@ class PredictController extends Controller
 {
     public function list()
     {
-        $predicts = Predict::with(['citizen:id,name,age,income,occupation,number_of_dependent,residence_status,last_education,marital_status'])->select(['id', 'citizen_id', 'is_eligible'])->get();
+        $predicts = Predict::with(['citizen', 'modelEvaluation'])
+            ->select('predicts.*')
+            ->get();
 
         return DataTables::of($predicts)
+            ->addColumn('created_at', function ($predict) {
+                return $predict->created_at->format('d/m/Y H:i');
+            })
             ->addColumn('action', function () {
                 return '';  // Will be rendered by JavaScript
             })

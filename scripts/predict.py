@@ -76,6 +76,25 @@ X_train, X_test, y_train, y_test = train_test_split(
     df_bootstrap, y_bootstrap, test_size=0.2, stratify=y_bootstrap, random_state=42
 )
 
+# 📌 create sequence and make sure not duplicate
+cursor.execute("SELECT MAX(name) FROM model_evaluations")
+result = cursor.fetchone()
+latest_sequence = result[0] if result else None
+
+sequence = int(latest_sequence.split(" ")[-1]) + 1 if latest_sequence else 1
+
+# 📌 Tambahkan data model ke tabel model_evaluations
+id = cursor.execute(
+    "INSERT INTO model_evaluations (name, created_at) VALUES (%s, NOW())",
+    ("Decision Tree C4.5 - " + str(sequence))
+)
+
+db_connection.commit()
+
+# 📌 Dapatkan ID terakhir yang di-insert
+cursor.execute("SELECT LAST_INSERT_ID()")
+model_evaluation_id = cursor.fetchone()[0]
+
 # 📌 Buat Model Decision Tree C4.5
 dt_model = DecisionTreeClassifier(
     criterion="entropy",
@@ -104,22 +123,17 @@ total_saved = 0
 for _, row in df_hasil.iterrows():
     if row['citizen_id'] in valid_citizen_ids:
         cursor.execute(
-            "INSERT INTO predicts (citizen_id, is_eligible, created_at, updated_at) VALUES (%s, %s, NOW(), NOW())",
-            (row['citizen_id'], 1 if row['is_eligible'] == 'Ya' else 0)
+            "INSERT INTO predicts (model_evaluation_id, citizen_id, is_eligible, created_at, updated_at) VALUES (%s, %s, %s, NOW(), NOW())",
+            (model_evaluation_id, row['citizen_id'], 1 if row['is_eligible'] == 'Ya' else 0)
         )
         total_saved += 1
 
 db_connection.commit()
 
-# 📌 Simpan hasil evaluasi ke dalam tabel model_evaluations
+# 📌 Update model_evaluations dengan hasil evaluasi
 cursor.execute(
-    "INSERT INTO model_evaluations (name, accuracy, conf_matrix, model_precision, model_recall, model_f1_score, created_at) VALUES (%s, %s, %s, %s, %s, %s, NOW())",
-    ("Decision Tree C4.5", 
-     accuracy, 
-     json.dumps(conf_matrix.tolist()),
-     classification_report_result["weighted avg"]["precision"],
-     classification_report_result["weighted avg"]["recall"],
-     classification_report_result["weighted avg"]["f1-score"])
+    "UPDATE model_evaluations SET accuracy = %s, conf_matrix = %s, model_precision = %s, model_recall = %s, model_f1_score = %s WHERE name = %s",
+    (accuracy, json.dumps(conf_matrix.tolist()), classification_report_result["weighted avg"]["precision"], classification_report_result["weighted avg"]["recall"], classification_report_result["weighted avg"]["f1-score"], 'Decision Tree C4.5 - ' + str(sequence))
 )
 
 db_connection.commit()

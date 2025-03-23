@@ -9,7 +9,8 @@ class HasilKlasifikasiController extends Controller
 {
     public function index()
     {
-        $penerimaBantuan = Predict::where('is_eligible', 1)->get();
+        $penerimaBantuan = Predict::with('modelEvaluation', 'citizen')->where('is_eligible', 1)->get();
+
         return view('hasil-klasifikasi.index', compact('penerimaBantuan'));
     }
 }

@@ -12,4 +12,9 @@ class Predict extends Model
     {
         return $this->belongsTo(Citizen::class);
     }
+
+    public function modelEvaluation()
+    {
+        return $this->belongsTo(ModelEvaluation::class);
+    }
 }
