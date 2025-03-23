@@ -14,8 +14,8 @@ class LaporanController extends Controller
         $latestModelEvaluation = ModelEvaluation::latest()->first();
 
         // Ambil data akurasi dan confusion matrix
-        $accuracy = $latestModelEvaluation->accuracy;
-        $confusionMatrix = $latestModelEvaluation->conf_matrix;
+        $accuracy = $latestModelEvaluation->accuracy ?? '';
+        $confusionMatrix = $latestModelEvaluation->conf_matrix ?? '';
 
 
         return view('laporan-export.index', compact('accuracy', 'confusionMatrix'));
@@ -31,12 +31,10 @@ class LaporanController extends Controller
             $latestModelEvaluation = ModelEvaluation::latest()->first();
         }
 
-        $accuracy = $latestModelEvaluation->accuracy;
-        $confusionMatrix = $latestModelEvaluation->conf_matrix;
+        $accuracy = $latestModelEvaluation->accuracy ?? '';
+        $confusionMatrix = $latestModelEvaluation->conf_matrix ?? '';
 
-        if ($type === 'pdf') {
-            return $this->exportPdf($accuracy, $confusionMatrix);
-        }
+        return $this->exportPdf($accuracy, $confusionMatrix);
     }
 
     private function exportPdf($accuracy, $confusionMatrix)
