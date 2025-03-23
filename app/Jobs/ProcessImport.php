@@ -60,25 +60,34 @@ class ProcessImport implements ShouldQueue
                 $rowData['marital_status'] = $rowData['marital_status'] === 'Kawin' ? true : false;
                 $rowData['income'] = str_replace(',', '', $rowData['income']);
 
-                $citizen = Citizen::create([
-                    'name' => $rowData['name'],
-                    'age' => $rowData['age'],
-                    'income' => $rowData['income'],
-                    'occupation' => $rowData['occupation'],
-                    'number_of_dependent' => $rowData['number_of_dependent'],
-                    'residence_status' => $rowData['residence_status'],
-                    'last_education' => $rowData['last_education'],
-                    'marital_status' => $rowData['marital_status']
-                ]);
+                // Gunakan firstOrCreate untuk mencegah duplikasi
+                $citizen = Citizen::firstOrCreate(
+                    [
+                        'name' => $rowData['name'],
+                        'age' => $rowData['age']
+                    ],
+                    [
+                        'income' => $rowData['income'],
+                        'occupation' => $rowData['occupation'],
+                        'number_of_dependent' => $rowData['number_of_dependent'],
+                        'residence_status' => $rowData['residence_status'],
+                        'last_education' => $rowData['last_education'],
+                        'marital_status' => $rowData['marital_status']
+                    ]
+                );
 
                 foreach ($this->attributes as $attribute) {
                     $key = $attribute->name;
                     if (isset($rowData[$key])) {
-                        AttributeCitizen::create([
-                            'attribute_id' => $attribute->id,
-                            'citizen_id' => $citizen->id,
-                            'value' => $rowData[$key]
-                        ]);
+                        AttributeCitizen::updateOrCreate(
+                            [
+                                'attribute_id' => $attribute->id,
+                                'citizen_id' => $citizen->id
+                            ],
+                            [
+                                'value' => $rowData[$key]
+                            ]
+                        );
                     }
                 }
 
