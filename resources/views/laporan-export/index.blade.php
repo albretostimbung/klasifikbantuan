@@ -20,20 +20,23 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Akurasi Card -->
-                <div class="bg-white rounded-lg shadow p-6">
-                    <h2 class="text-lg font-semibold mb-4">Akurasi Model</h2>
-                    <div class="text-3xl font-bold text-blue-600">
-                        {{ number_format($accuracy * 100, 2) }}%
+                @if($accuracy)
+                    <!-- Akurasi Card -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-lg font-semibold mb-4">Akurasi Model</h2>
+                        <div class="text-3xl font-bold text-blue-600">
+                            {{ number_format($accuracy * 100, 2) }}%
+                        </div>
+                        <p class="text-sm text-gray-500 mt-2">Tingkat akurasi model klasifikasi terbaru</p>
                     </div>
-                    <p class="text-sm text-gray-500 mt-2">Tingkat akurasi model klasifikasi terbaru</p>
-                </div>
+                @endif
 
-                <!-- Confusion Matrix Card -->
-                <div class="bg-white rounded-lg shadow p-6">
-                    <h2 class="text-lg font-semibold mb-4">Confusion Matrix</h2>
-                    <table class="w-full">
-                        <thead>
+                @if($confusionMatrix)
+                    <!-- Confusion Matrix Card -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-lg font-semibold mb-4">Confusion Matrix</h2>
+                        <table class="w-full">
+                            <thead>
                             <tr class="bg-gray-50">
                                 <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Kelas</th>
                                 @foreach(['Prediksi Tidak', 'Prediksi Ya'] as $header)
@@ -53,6 +56,7 @@
                         </tbody>
                     </table>
                 </div>
+                @endif
             </div>
 
             <!-- History Evaluasi Model -->
