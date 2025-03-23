@@ -9,7 +9,6 @@ use App\Models\Citizen;
 use App\Models\Attribute;
 use Illuminate\Http\Request;
 use App\Models\AttributeCitizen;
-use App\Jobs\ProcessImport;
 
 class ImportController extends Controller
 {

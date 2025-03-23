@@ -23,8 +23,6 @@ class LaporanController extends Controller
 
     public function export(Request $request)
     {
-        $type = $request->get('type');
-
         if ($request->get('id')) {
             $latestModelEvaluation = ModelEvaluation::find($request->get('id'));
         } else {
