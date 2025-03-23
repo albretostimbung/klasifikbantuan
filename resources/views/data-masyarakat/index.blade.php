@@ -254,7 +254,16 @@
                 document.getElementById('file-name').textContent = fileName;
             }
 
+            let isImporting = false;
+
             function handleImport(event) {
+                if (isImporting) {
+        alert('Import sedang diproses, harap tunggu...');
+        return;
+    }
+
+    isImporting = true;
+
                 event.preventDefault();
                 const formData = new FormData(event.target);
 
@@ -280,7 +289,7 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert('Data imported successfully!');
+                        alert(data.message);
                         closeImportModal();
                         $('#citizenTable').DataTable().ajax.reload();
                     } else {
@@ -291,6 +300,7 @@
                     alert('Error importing data: ' + error.message);
                 })
                 .finally(() => {
+                    isImporting = false;
                     // Reset form and button state
                     event.target.reset();
                     document.getElementById('file-name').textContent = 'Choose file...';
