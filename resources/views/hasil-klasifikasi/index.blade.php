@@ -15,6 +15,8 @@
                 <table id="penerimaBantuanTable" class="w-full">
                     <thead>
                         <tr>
+                            <th>Tanggal</th>
+                            <th>Model</th>
                             <th>Masyarakat</th>
                             <th>Penerima Bantuan</th>
                         </tr>
@@ -161,7 +163,16 @@
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('predict.list') }}",
-                columns: [{
+                columns: [
+                    {
+                        data: 'created_at',
+                        name: 'created_at',
+                    },
+                    {
+                        data: 'model_evaluation.name',
+                        name: 'name',
+                    },
+                    {
                         data: 'citizen.name',
                         name: 'name',
                         render: function(data, type, row) {
