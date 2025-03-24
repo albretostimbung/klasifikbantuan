@@ -10,7 +10,7 @@
             <div class="flex justify-between items-center mb-6">
                 <h1 class="text-2xl font-bold">Laporan Model Klasifikasi</h1>
                 <div class="flex gap-2">
-                    @if (count($latestModelEvaluation) > 0)
+                    @if ($latestModelEvaluation)
                         <a href="{{ route('laporan.export', ['type' => 'pdf']) }}"
                             class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md flex items-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -28,7 +28,11 @@
                 <div class="bg-white rounded-lg shadow p-6">
                     <h2 class="text-lg font-semibold mb-4">Akurasi Model</h2>
                     <div class="text-3xl font-bold text-blue-600">
-                        {{ number_format($accuracy * 100, 2) }}%
+                        @if($latestModelEvaluation)
+                            {{ number_format($latestModelEvaluation->accuracy * 100, 2) }}%
+                        @else
+                            0%
+                        @endif
                     </div>
                     <p class="text-sm text-gray-500 mt-2">Tingkat akurasi model klasifikasi terbaru</p>
                 </div>
@@ -47,8 +51,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if ($confusionMatrix !== 0)
-                                @foreach (json_decode($confusionMatrix) as $index => $row)
+                            @if ($latestModelEvaluation)
+                                @foreach (json_decode($latestModelEvaluation->conf_matrix) as $index => $row)
                                     <tr class="border-b">
                                         <td class="px-4 py-3 text-sm font-medium">Aktual {{ $index == 0 ? 'Tidak' : 'Ya' }}
                                         </td>

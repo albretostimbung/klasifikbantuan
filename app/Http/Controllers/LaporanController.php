@@ -13,12 +13,8 @@ class LaporanController extends Controller
     {
         $latestModelEvaluation = ModelEvaluation::latest()->first();
 
-        // Ambil data akurasi dan confusion matrix
-        $accuracy = $latestModelEvaluation->accuracy ?? 0;
-        $confusionMatrix = $latestModelEvaluation->conf_matrix ?? 0;
 
-
-        return view('laporan-export.index', compact('accuracy', 'confusionMatrix'));
+        return view('laporan-export.index', compact('latestModelEvaluation'));
     }
 
     public function export(Request $request)
