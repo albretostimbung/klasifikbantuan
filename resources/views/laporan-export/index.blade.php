@@ -10,14 +10,16 @@
             <div class="flex justify-between items-center mb-6">
                 <h1 class="text-2xl font-bold">Laporan Model Klasifikasi</h1>
                 <div class="flex gap-2">
-                    <a href="{{ route('laporan.export', ['type' => 'pdf']) }}"
-                        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md flex items-center gap-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-                        </svg>
-                        Export PDF
-                    </a>
+                    @if (count($latestModelEvaluation))
+                        <a href="{{ route('laporan.export', ['type' => 'pdf']) }}"
+                            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                            </svg>
+                            Export PDF
+                        </a>
+                    @endif
                 </div>
             </div>
 
