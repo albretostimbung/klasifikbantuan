@@ -11,7 +11,7 @@
                 <h1 class="text-2xl font-bold">Laporan Model Klasifikasi</h1>
                 <div class="flex gap-2">
                     @if ($latestModelEvaluation)
-                        <a href="{{ route('laporan.export', ['type' => 'pdf']) }}"
+                        <a href="{{ route('laporan.export-laporan', ['id' => $latestModelEvaluation->id]) }}"
                             class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md flex items-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -23,18 +23,70 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Nama Model Card -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h2 class="text-lg font-semibold mb-4">Nama Model</h2>
+                    <div class="text-3xl font-bold text-blue-600">
+                        @if ($latestModelEvaluation)
+                            {{ $latestModelEvaluation->name }}
+                        @else
+                            0%
+                        @endif
+                    </div>
+                    <p class="text-sm text-gray-500 mt-2">Nama model klasifikasi terbaru</p>
+                </div>
+
                 <!-- Akurasi Card -->
                 <div class="bg-white rounded-lg shadow p-6">
                     <h2 class="text-lg font-semibold mb-4">Akurasi Model</h2>
                     <div class="text-3xl font-bold text-blue-600">
-                        @if($latestModelEvaluation)
+                        @if ($latestModelEvaluation)
                             {{ number_format($latestModelEvaluation->accuracy * 100, 2) }}%
                         @else
                             0%
                         @endif
                     </div>
                     <p class="text-sm text-gray-500 mt-2">Tingkat akurasi model klasifikasi terbaru</p>
+                </div>
+
+                <!-- Precision Card -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h2 class="text-lg font-semibold mb-4">Precision Model</h2>
+                    <div class="text-3xl font-bold text-blue-600">
+                        @if ($latestModelEvaluation->model_precision)
+                            {{ number_format($latestModelEvaluation->model_precision * 100, 2) }}%
+                        @else
+                            0%
+                        @endif
+                    </div>
+                    <p class="text-sm text-gray-500 mt-2">Tingkat precision model klasifikasi terbaru</p>
+                </div>
+
+                <!-- Recall Card -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h2 class="text-lg font-semibold mb-4">Recall Model</h2>
+                    <div class="text-3xl font-bold text-blue-600">
+                        @if ($latestModelEvaluation->model_recall)
+                            {{ number_format($latestModelEvaluation->model_recall * 100, 2) }}%
+                        @else
+                            0%
+                        @endif
+                    </div>
+                    <p class="text-sm text-gray-500 mt-2">Tingkat recall model klasifikasi terbaru</p>
+                </div>
+
+                <!-- F1 Score Card -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h2 class="text-lg font-semibold mb-4">F1 Score Model</h2>
+                    <div class="text-3xl font-bold text-blue-600">
+                        @if ($latestModelEvaluation->model_f1_score)
+                            {{ number_format($latestModelEvaluation->model_f1_score * 100, 2) }}%
+                        @else
+                            0%
+                        @endif
+                    </div>
+                    <p class="text-sm text-gray-500 mt-2">Tingkat F1 score model klasifikasi terbaru</p>
                 </div>
 
                 <!-- Confusion Matrix Card -->
@@ -45,7 +97,8 @@
                             <tr class="bg-gray-50">
                                 <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Kelas</th>
                                 @foreach (['Prediksi Tidak', 'Prediksi Ya'] as $header)
-                                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">{{ $header }}
+                                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">
+                                        {{ $header }}
                                     </th>
                                 @endforeach
                             </tr>
@@ -54,7 +107,8 @@
                             @if ($latestModelEvaluation)
                                 @foreach (json_decode($latestModelEvaluation->conf_matrix) as $index => $row)
                                     <tr class="border-b">
-                                        <td class="px-4 py-3 text-sm font-medium">Aktual {{ $index == 0 ? 'Tidak' : 'Ya' }}
+                                        <td class="px-4 py-3 text-sm font-medium">Aktual
+                                            {{ $index == 0 ? 'Tidak' : 'Ya' }}
                                         </td>
                                         @foreach ($row as $value)
                                             <td class="px-4 py-3 text-sm">{{ $value }}</td>

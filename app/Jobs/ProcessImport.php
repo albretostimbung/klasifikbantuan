@@ -58,7 +58,7 @@ class ProcessImport implements ShouldQueue
                 $rowData = array_combine($mapped_headers, $record);
 
                 $rowData['marital_status'] = $rowData['marital_status'] === 'Kawin' ? true : false;
-                $rowData['income'] = str_replace(',', '', $rowData['income']);
+                $rowData['income'] = str_replace(',', '.', $rowData['income']);
 
                 // Gunakan firstOrCreate untuk mencegah duplikasi
                 $citizen = Citizen::firstOrCreate(

@@ -13,43 +13,45 @@ class LaporanController extends Controller
     {
         $latestModelEvaluation = ModelEvaluation::latest()->first();
 
-
         return view('laporan-export.index', compact('latestModelEvaluation'));
     }
 
-    public function export(Request $request)
+    public function exportLaporan(Request $request)
     {
-        if ($request->get('id')) {
-            $latestModelEvaluation = ModelEvaluation::find($request->get('id'));
-        } else {
-            $latestModelEvaluation = ModelEvaluation::latest()->first();
-        }
-
-        $accuracy = $latestModelEvaluation->accuracy ?? '';
-        $confusionMatrix = $latestModelEvaluation->conf_matrix ?? '';
-
-        return $this->exportPdf($accuracy, $confusionMatrix);
+        $latestModelEvaluation = ModelEvaluation::find($request->id);
+        return $this->exportLaporanPdf($latestModelEvaluation);
     }
 
-    private function exportPdf($accuracy, $confusionMatrix)
+    public function exportPenerimaBantuan(Request $request)
     {
-        $pdf = Pdf::loadView('laporan-export.pdf', [
-            'accuracy' => $accuracy,
-            'confusionMatrix' => $confusionMatrix
-        ]);
+        $latestModelEvaluation = ModelEvaluation::find($request->id);
+        return $this->exportPenerimaBantuanPdf($latestModelEvaluation);
+    }
+
+    private function exportLaporanPdf($latestModelEvaluation)
+    {
+        $pdf = Pdf::loadView('laporan-export.laporan-pdf', compact('latestModelEvaluation'));
         return $pdf->download('report.pdf');
+    }
+
+    private function exportPenerimaBantuanPdf($latestModelEvaluation)
+    {
+        $daftarPenerimaBantuan = $latestModelEvaluation->predicts()->where('is_eligible', true)->get();
+
+        $pdf = Pdf::loadView('laporan-export.penerima-bantuan-pdf', compact('latestModelEvaluation', 'daftarPenerimaBantuan'));
+        return $pdf->download('penerima-bantuan.pdf');
     }
 
     public function evaluations(Request $request)
     {
-        $evaluations = ModelEvaluation::query();
+        $evaluations = ModelEvaluation::latest()->get();
 
         return DataTables::of($evaluations)
-            ->editColumn('created_at', function($evaluation) {
+            ->editColumn('created_at', function ($evaluation) {
                 return $evaluation->created_at->format('d/m/Y H:i');
             })
-            ->addColumn('action', function($evaluation) {
-                return '<a href="'.route('laporan.export', ['type' => 'pdf', 'id' => $evaluation->id]).'" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">Export PDF</a>';
+            ->addColumn('action', function ($evaluation) {
+                return '<a href="' . route('laporan.export-penerima-bantuan', $evaluation->id) . '" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">Export PDF</a>';
             })
             ->rawColumns(['action'])
             ->make(true);
