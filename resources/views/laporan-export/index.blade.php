@@ -45,14 +45,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (json_decode($confusionMatrix) as $index => $row)
-                                <tr class="border-b">
-                                    <td class="px-4 py-3 text-sm font-medium">Aktual {{ $index == 0 ? 'Tidak' : 'Ya' }}</td>
-                                    @foreach ($row as $value)
-                                        <td class="px-4 py-3 text-sm">{{ $value }}</td>
-                                    @endforeach
-                                </tr>
-                            @endforeach
+                            @if ($confusionMatrix !== 0)
+                                @foreach (json_decode($confusionMatrix) as $index => $row)
+                                    <tr class="border-b">
+                                        <td class="px-4 py-3 text-sm font-medium">Aktual {{ $index == 0 ? 'Tidak' : 'Ya' }}
+                                        </td>
+                                        @foreach ($row as $value)
+                                            <td class="px-4 py-3 text-sm">{{ $value }}</td>
+                                        @endforeach
+                                    </tr>
+                                @endforeach
+                            @endif
                         </tbody>
                     </table>
                 </div>
