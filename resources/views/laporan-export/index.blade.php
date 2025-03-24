@@ -10,7 +10,7 @@
             <div class="flex justify-between items-center mb-6">
                 <h1 class="text-2xl font-bold">Laporan Model Klasifikasi</h1>
                 <div class="flex gap-2">
-                    @if (count($latestModelEvaluation))
+                    @if (count($latestModelEvaluation) > 0)
                         <a href="{{ route('laporan.export', ['type' => 'pdf']) }}"
                             class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md flex items-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
