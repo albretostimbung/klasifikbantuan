@@ -74,7 +74,8 @@ Route::middleware('auth')->group(function () {
     // Laporan Routes
     Route::prefix('laporan')->name('laporan.')->group(function () {
         Route::get('/', [LaporanController::class, 'index'])->name('index');
-        Route::get('/export', [LaporanController::class, 'export'])->name('export');
         Route::get('/evaluations', [LaporanController::class, 'evaluations'])->name('evaluations');
+        Route::get('/export-laporan/{id}', [LaporanController::class, 'exportLaporan'])->name('export-laporan');
+        Route::get('/export-penerima-bantuan/{id}', [LaporanController::class, 'exportPenerimaBantuan'])->name('export-penerima-bantuan');
     });
 });
