@@ -20,7 +20,7 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                @if(!empty($accuracy))
+                @if($accuracy !== 0)
                     <!-- Akurasi Card -->
                     <div class="bg-white rounded-lg shadow p-6">
                         <h2 class="text-lg font-semibold mb-4">Akurasi Model</h2>
@@ -31,7 +31,7 @@
                     </div>
                 @endif
 
-                @if(!empty($confusionMatrix))
+                @if($confusionMatrix !== 0)
                     <!-- Confusion Matrix Card -->
                     <div class="bg-white rounded-lg shadow p-6">
                         <h2 class="text-lg font-semibold mb-4">Confusion Matrix</h2>
