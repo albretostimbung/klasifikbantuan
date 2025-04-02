@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  # Laravel PHP Service
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: laravel_app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - .:/var/www:delegated
+      - composer-cache:/root/.composer
+      - vendor:/var/www/vendor
+    networks:
+      - laravel-network
+    environment:
+      - DB_HOST=db
+      - DB_DATABASE=klasifikbantuan
+      - DB_USERNAME=klasifikbantuan
+      - DB_PASSWORD=secret
+    ports:
+      - "8181:8181"
+
+  # Python Service
+  python:
+    image: python:3.11-slim
+    container_name: python_app
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - .:/app
+    networks:
+      - laravel-network
+    command: tail -f /dev/null
+
+  # MySQL Service
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: klasifikbantuan
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_PASSWORD: secret
+      MYSQL_USER: klasifikbantuan
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - laravel-network
+    ports:
+      - "3306:3306"
+
+  # Node.js Service
+  node:
+    image: node:18
+    container_name: node_app
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - .:/app
+    networks:
+      - laravel-network
+    command: bash -c "npm install && npm run dev"
+    ports:
+      - "3000:3000"  # For Vite's default dev server
+      - "5173:5173"   # For Vite's development server
+    environment:
+      - NODE_ENV=development
+      - VITE_HOST=0.0.0.0
+
+networks:
+  laravel-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+  composer-cache:
+  vendor:
