@@ -33,6 +33,11 @@ services:
       - .:/app
     networks:
       - laravel-network
+    environment:
+      - DB_HOST=db
+      - DB_USERNAME=klasifikbantuan
+      - DB_PASSWORD=secret
+      - DB_DATABASE=klasifikbantuan
     command: tail -f /dev/null
 
   # MySQL Service

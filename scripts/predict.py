@@ -19,13 +19,12 @@ if (load_dotenv("/www/wwwroot/klasifikbantuan/.env")):
         database=os.getenv("DB_DATABASE")
     )
 else:
-    load_dotenv("/var/www/.env")
     # 📌 Koneksi ke Database MySQL
     db_connection = pymysql.connect(
-        host=os.getenv("DB_HOST"),
-        user=os.getenv("DB_USERNAME"),
-        password=os.getenv("DB_PASSWORD"),
-        database=os.getenv("DB_DATABASE")
+        host="db",
+        user="klasifikbantuan",
+        password="secret",
+        database="klasifikbantuan"
     )
 cursor = db_connection.cursor()
 
