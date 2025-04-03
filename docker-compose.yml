@@ -65,15 +65,18 @@ services:
     working_dir: /app
     volumes:
       - .:/app
+      - /app/node_modules
     networks:
       - laravel-network
     command: bash -c "npm install && npm run dev"
     ports:
-      - "3000:3000"  # For Vite's default dev server
+      - "3000:3000"  # For Laravel's development server
       - "5173:5173"   # For Vite's development server
     environment:
       - NODE_ENV=development
       - VITE_HOST=0.0.0.0
+      - VITE_PORT=5173
+      - VITE_HMR_HOST=localhost
 
 networks:
   laravel-network:
