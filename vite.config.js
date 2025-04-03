@@ -1,6 +1,5 @@
-import { defineConfig } from 'vite'
-import laravel from 'laravel-vite-plugin'
-import tailwindcss from '@tailwindcss/vite'
+import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
 
 export default defineConfig({
     plugins: [
@@ -8,7 +7,6 @@ export default defineConfig({
             input: ['resources/css/app.css', 'resources/js/app.js'],
             refresh: true,
         }),
-        tailwindcss(),
     ],
     server: {
         host: 'localhost',
@@ -16,6 +14,19 @@ export default defineConfig({
         hmr: {
             host: 'localhost',
             port: 5173
+        },
+        watch: {
+            usePolling: true,
+            interval: 1000
+        }
+    },
+    build: {
+        assetsDir: 'css',
+        rollupOptions: {
+            input: {
+                main: 'resources/js/app.js',
+                css: 'resources/css/app.css'
+            }
         }
     }
-})
+});
